@@ -1,14 +1,14 @@
 #pragma once
 
-#include <string>
+#include <filesystem>
 
 enum class ExtensionType {
-	Directory,
-	Image,
-	Markdown,
-	PDF,
-	Text,
-	Video,
+	Directory = 0,
+	Image = 1,
+	Markdown = 2,
+	PDF = 3,
+	Text = 4,
+	Video = 5,
 };
 
-ExtensionType DetermineExtensionType(const std::string &file);
+ExtensionType DetermineExtensionType(const std::filesystem::path &file);

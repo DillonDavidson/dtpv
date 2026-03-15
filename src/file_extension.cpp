@@ -1,13 +1,17 @@
 #include "file_extension.hpp"
 
-ExtensionType DetermineExtensionType(const std::string &file)
+ExtensionType DetermineExtensionType(const std::filesystem::path &file)
 {
-	if (file.ends_with(".pdf")) {
+	if (file.extension() == ".pdf") {
 		return ExtensionType::PDF;
 	}
 
-	if (file.ends_with(".md")) {
+	if (file.extension() == ".md") {
 		return ExtensionType::Markdown;
+	}
+
+	if (file.extension() == ".mkv") {
+		return ExtensionType::Video;
 	}
 
 	return ExtensionType::Text;

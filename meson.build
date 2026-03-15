@@ -3,11 +3,17 @@ project('dtpv', 'cpp',
 	default_options: [
 		'cpp_std=c++26',
 		'warning_level=3',
+		'optimization=3',
 	]
 )
 
-cmd = run_command('./scripts/grabber.sh', check: true)
-srcs = cmd.stdout().strip().split('\n')
+srcs = [
+	'src/main.cpp',
+	'src/file_extension.cpp',
+	'src/video.cpp',
+	'src/text.cpp',
+	'src/markdown.cpp',
+]
 
 deps = []
 

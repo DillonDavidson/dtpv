@@ -1,4 +1,7 @@
 #include "file_extension.hpp"
+#include "markdown.hpp"
+#include "text.hpp"
+#include "video.hpp"
 
 #include <string>
 #include <unistd.h>
@@ -10,24 +13,29 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	std::string file = argv[1];
+	const fs::path file = argv[1];
+	const std::string width = argc > 2 ? argv[2] : "80";
+	const std::string height = argc > 3 ? argv[3] : "40";
 
 	ExtensionType ext = DetermineExtensionType(file);
 
 	std::vector<std::string> args;
+
 	switch (ext) {
 	case ExtensionType::Directory:
 		break;
 	case ExtensionType::Image:
 		break;
 	case ExtensionType::Markdown:
-		args = {"glow", file};
+		args = BuildMarkdownCommand(width, file);
+		break;
 	case ExtensionType::PDF:
 		break;
 	case ExtensionType::Text:
-		args = {"bat", "--color=always", file};
+		args = BuildTextCommand(width, file);
 		break;
 	case ExtensionType::Video:
+		args = BuildVideoCommand(width, height, file);
 		break;
 	}
 
@@ -38,6 +46,10 @@ int main(int argc, char *argv[])
 	}
 
 	cargs.push_back(nullptr);
+
+	// This fixes the bleed but kind of bugs lf, so I'm ignoring it for now
+	// I leave this as a future problem for nerds
+	// std::cout << "\033[H\033[2J" << std::flush;
 
 	execvp(cargs[0], cargs.data());
 
