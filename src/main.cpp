@@ -1,5 +1,7 @@
-#include "file_extension.hpp"
+#include "file_type.hpp"
+#include "image.hpp"
 #include "markdown.hpp"
+#include "pdf.hpp"
 #include "text.hpp"
 #include "video.hpp"
 
@@ -17,24 +19,27 @@ int main(int argc, char *argv[])
 	const std::string width = argc > 2 ? argv[2] : "80";
 	const std::string height = argc > 3 ? argv[3] : "40";
 
-	ExtensionType ext = DetermineExtensionType(file);
+	FileType ext = DetermineFileType(file);
 
 	std::vector<std::string> args;
 
 	switch (ext) {
-	case ExtensionType::Directory:
+	case FileType::Directory:
 		break;
-	case ExtensionType::Image:
+	case FileType::Image:
+		args = BuildImageCommand(width, height, file);
 		break;
-	case ExtensionType::Markdown:
+	case FileType::Markdown:
 		args = BuildMarkdownCommand(width, file);
 		break;
-	case ExtensionType::PDF:
+	case FileType::PDF:
+		args = BuildPDFCommand(width, height, file);
 		break;
-	case ExtensionType::Text:
+	case FileType::Text:
+	case FileType::Error:
 		args = BuildTextCommand(width, file);
 		break;
-	case ExtensionType::Video:
+	case FileType::Video:
 		args = BuildVideoCommand(width, height, file);
 		break;
 	}

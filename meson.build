@@ -9,10 +9,13 @@ project('dtpv', 'cpp',
 
 srcs = [
 	'src/main.cpp',
-	'src/file_extension.cpp',
+	'src/file_type.cpp',
 	'src/video.cpp',
 	'src/text.cpp',
 	'src/markdown.cpp',
+	'src/image.cpp',
+	'src/pdf.cpp',
+	'src/cache.cpp',
 ]
 
 deps = []
