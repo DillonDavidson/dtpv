@@ -18,5 +18,5 @@ std::vector<std::string> BuildPDFCommand(const std::string &width, const std::st
 		GenerateThumbnail(file, cache, args);
 	}
 
-	return {"chafa", "-s", width + "x" + height, "-f", "sixels", cache};
+	return {"chafa", "-s", width + "x" + height, "-f", "sixels", "--bg", "black", "--polite", "on", cache};
 }
