@@ -22,6 +22,7 @@ func main() {
 	}
 
 	var args []string
+
 	switch filepath.Ext(file) {
 	case ".pdf":
 		args = buildPDFCommand(file, width, height)
@@ -41,6 +42,14 @@ func main() {
 		args = buildImageCommand(file, width, height)
 	case ".zip":
 		args = buildArchiveCommand(file)
+	case ".pptx":
+		fallthrough
+	case ".ppt":
+		fallthrough
+	case ".docx":
+		fallthrough
+	case ".doc":
+		args = buildLibreOfficeCommand(file, width, height)
 	default:
 		args = buildTextCommand(file, width)
 	}

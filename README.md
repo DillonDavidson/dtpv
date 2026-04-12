@@ -10,6 +10,7 @@ Dillon's Terminal PreViewer - a terminal-based file previewer for text, images, 
 - [ffmpegthumbnailer](https://github.com/dirkvdb/ffmpegthumbnailer) - video thumbnail generation
 - [glow](https://github.com/charmbracelet/glow) - markdown previews
 - [poppler](https://poppler.freedesktop.org/) - pdf previews with pdftoppm
+- [LibreOffice](https://www.libreoffice.org/) - doc and ppt previews
 
 ## Building
 
