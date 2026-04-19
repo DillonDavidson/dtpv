@@ -40,6 +40,10 @@ func main() {
 		fallthrough
 	case ".webp":
 		args = buildImageCommand(file, width, height)
+	case ".gz":
+		fallthrough
+	case ".tar":
+		fallthrough
 	case ".zip":
 		args = buildArchiveCommand(file)
 	case ".pptx":
