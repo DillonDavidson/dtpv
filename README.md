@@ -4,8 +4,8 @@ Dillon's Terminal PreViewer - a terminal-based file previewer for text, images, 
 
 ## Dependencies
 
+- [kitty](https://github.com/kovidgoyal/kitty) - renders images/video thumbnails in the terminal
 - [atool](https://www.nongnu.org/atool/) - preview archive files
-- [chafa](https://github.com/hpjansson/chafa/) - renders images/video thumbnails in the terminal
 - [bat](https://github.com/sharkdp/bat) - syntax-highlighted text previews
 - [ffmpegthumbnailer](https://github.com/dirkvdb/ffmpegthumbnailer) - video thumbnail generation
 - [glow](https://github.com/charmbracelet/glow) - markdown previews
@@ -17,7 +17,7 @@ Dillon's Terminal PreViewer - a terminal-based file previewer for text, images, 
 ```bash
 git clone https://github.com/DillonDavidson/dtpv
 cd dtpv
-go install
+go install ./...
 ```
 
 ## Usage
@@ -25,6 +25,7 @@ go install
 Add the following to your `~/.config/lf/lfrc`:
 ```bash
 set previewer dtpv
+set cleaner dtpvclean
 ```
 
 ## License
