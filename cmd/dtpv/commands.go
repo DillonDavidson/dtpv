@@ -13,18 +13,27 @@ func buildArchiveCommand(file string) []string {
 }
 
 func buildImageCommand(file, width, height, x, y string) []string {
-	// return []string{
-	// 	"chafa", "-s", width + "x" + height, "--format", "kitty",
-	// 	"--bg", "black", "--passthrough", "none", "--polite", "on", file,
-	// }
-	return []string{
-		"kitten",
-		"icat",
-		"--stdin", "no",
-		"--transfer-mode", "memory",
-		"--place", fmt.Sprintf("%sx%s@%sx%s", width, height, x, y),
-		file,
+	switch IMAGE_PROTOCOL {
+	case KITTY_KITTEN:
+		return []string{
+			"kitten",
+			"icat",
+			"--stdin", "no",
+			"--transfer-mode", "memory",
+			"--place", fmt.Sprintf("%sx%s@%sx%s", width, height, x, y),
+			file,
+		}
+	case KITTY_CHAFA, SIXEL:
+		format := "kitty"
+		if IMAGE_PROTOCOL == SIXEL {
+			format = "sixels"
+		}
+		return []string{
+			"chafa", "-s", width + "x" + height, "--format", format,
+			"--bg", "black", "--polite", "on", file,
+		}
 	}
+	return nil
 }
 
 func buildMarkdownCommand(file string, width string) []string {

@@ -1,21 +1,65 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
+	"time"
 )
 
-func runCommand(args []string, isImage bool) {
+type ImageProtocol int
+
+const (
+	SIXEL ImageProtocol = iota
+	KITTY_CHAFA
+	KITTY_KITTEN
+)
+
+func detectProtocol() ImageProtocol {
+	if isKittyTerminal() {
+		if _, err := exec.LookPath("kitten"); err == nil {
+			return KITTY_KITTEN
+		}
+		return KITTY_CHAFA
+	}
+	return SIXEL
+}
+
+func isKittyTerminal() bool {
+	if os.Getenv("KITTY_WINDOW_ID") != "" {
+		return true
+	}
+
+	// Only supporting ghostty and wezterm right now
+	switch os.Getenv("TERM_PROGRAM") {
+	case "ghostty", "WezTerm":
+		return true
+	}
+
+	// if os.Getenv("TERM") == "xterm-kitty" {
+	// 	return true
+	// }
+
+	return false
+}
+
+func runCommand(args []string, isImage bool, x, y string) {
 	cmd := exec.Command(args[0], args[1:]...)
 	cmd.Stderr = os.Stderr
+	cmd.Stdin, _ = os.Open(os.DevNull)
 
-	if isImage {
+	if isImage && IMAGE_PROTOCOL != SIXEL {
 		tty, err := os.OpenFile("/dev/tty", os.O_WRONLY, 0)
 		if err != nil {
 			cmd.Stdout = os.Stdout
 		} else {
 			defer tty.Close()
+			if IMAGE_PROTOCOL == KITTY_CHAFA {
+				time.Sleep(112 * time.Millisecond)
+				fmt.Fprintf(tty, "\x1b[%s;%sH", incr(y), incr(x)) // 1-indexed
+			}
 			cmd.Stdout = tty
 		}
 	} else {
@@ -27,6 +71,13 @@ func runCommand(args []string, isImage bool) {
 		println("exec failed:", err.Error())
 	}
 }
+
+func incr(s string) string {
+	n, _ := strconv.Atoi(s)
+	return strconv.Itoa(n + 1)
+}
+
+var IMAGE_PROTOCOL ImageProtocol = detectProtocol()
 
 func main() {
 	if len(os.Args) < 2 {
@@ -93,19 +144,17 @@ func main() {
 	}
 
 	if len(args) == 0 {
-		return
+		os.Exit(0)
 	}
 
-	runCommand(args, isImage)
-	os.Exit(1)
+	runCommand(args, isImage, x, y)
 
-	// cmd := exec.Command(args[0], args[1:]...)
-	//
-	// cmd.Stdout = os.Stdout
-	// cmd.Stderr = os.Stderr
-	//
-	// err := cmd.Run()
-	// if err != nil {
-	// 	println("exec failed:", err.Error())
-	// }
+	switch IMAGE_PROTOCOL {
+	case KITTY_KITTEN:
+		fallthrough
+	case KITTY_CHAFA:
+		os.Exit(1)
+	case SIXEL:
+		os.Exit(0)
+	}
 }
